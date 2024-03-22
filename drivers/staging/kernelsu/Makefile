@@ -1,19 +1,23 @@
-obj-y += ksu.o
-obj-y += allowlist.o
-kernelsu-objs := apk_sign.o
-obj-y += kernelsu.o
-obj-y += module_api.o
-obj-y += sucompat.o
-obj-y += uid_observer.o
-obj-y += manager.o
-obj-y += core_hook.o
-obj-y += ksud.o
-obj-y += embed_ksud.o
-obj-y += kernel_compat.o
+kernelsu-objs := ksu.o
+kernelsu-objs += allowlist.o
+kernelsu-objs += apk_sign.o
+kernelsu-objs += sucompat.o
+kernelsu-objs += uid_observer.o
+kernelsu-objs += manager.o
+kernelsu-objs += core_hook.o
+kernelsu-objs += ksud.o
+kernelsu-objs += embed_ksud.o
+kernelsu-objs += kernel_compat.o
 
-obj-y += selinux/
+kernelsu-objs += selinux/selinux.o
+kernelsu-objs += selinux/sepolicy.o
+kernelsu-objs += selinux/rules.o
+ccflags-y += -I$(srctree)/security/selinux -I$(srctree)/security/selinux/include
+ccflags-y += -I$(objtree)/security/selinux -include $(srctree)/include/uapi/asm-generic/errno.h
 
-KSU_GIT_VERSION := 1363
+obj-$(CONFIG_KSU) += kernelsu.o
+
+KSU_GIT_VERSION := 1482
 # ksu_version: major * 10000 + git version + 200 for historical reasons
 $(eval KSU_VERSION=$(shell expr 10000 + $(KSU_GIT_VERSION) + 200))
 # $(info -- KernelSU version: $(KSU_VERSION))
@@ -37,5 +41,13 @@ endif
 
 ccflags-y += -DEXPECTED_SIZE=$(KSU_EXPECTED_SIZE)
 ccflags-y += -DEXPECTED_HASH=\"$(KSU_EXPECTED_HASH)\"
+
+ifeq ($(shell grep -q "int path_umount" $(srctree)/fs/namespace.c; echo $$?),0)
+ccflags-y += -DKSU_UMOUNT
+else
+$(info -- Did you know you can backport path_umount to fs/namespace.c from 5.9?)
+$(info -- Read: https://kernelsu.org/guide/how-to-integrate-for-non-gki.html#how-to-backport-path_umount)
+endif
+
 ccflags-y += -Wno-implicit-function-declaration -Wno-strict-prototypes -Wno-int-conversion -Wno-gcc-compat
 ccflags-y += -Wno-declaration-after-statement
