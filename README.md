@@ -1,3 +1,32 @@
+# How to build
+## Dependencies
+- Ubuntu 24.04 wsl
+- https://wiki.ubuntu.com/Kernel/BuildYourOwnKernel
+- https://stackoverflow.com/questions/75705087/warning-a-load-segment-with-rwx-permissions-during-linux-kernel-build-leads-to-a
+- https://stackoverflow.com/questions/73210590/kernel-compilation-error-when-config-debug-info-btf-is-enabled
+- https://blog.seeflower.dev/archives/231/
+
+
+```bash
+apt-get update
+apt-get build-dep linux
+apt-get install -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git git-lfs gnupg gperf imagemagick lib32readline-dev lib32z1-dev libelf-dev liblz4-tool libncurses-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev p7zip-full p7zip-rar dwarves cmake libdwarf-dev libdw-dev pkgconf linux-tools-generic linux-tools-common bpfcc-tools libbpfcc libbpfcc-dev linux-generic libbpf-dev python-is-python3
+
+
+
+git clone https://github.com/acmel/dwarves.git --branch=v1.24
+cd dwarves/
+git checkout v1.24
+mkdir build
+cd build
+cmake -D__LIB=lib -DBUILD_SHARED_LIBS=OFF ..
+make install
+
+
+git  clone  --depth 1 https://github.com/LineageOS/android_prebuilts_clang_kernel_linux-x86_clang-r416183b /opt/clang-r416183b
+```
+
+
 # How do I submit patches to Android Common Kernels
 
 1. BEST: Make all of your changes to upstream Linux. If appropriate, backport to the stable releases.
