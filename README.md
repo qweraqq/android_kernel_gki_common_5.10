@@ -1,3 +1,8 @@
+```bash
+xaga:/ $ cat /proc/version
+Linux version 5.10.209-android12-9-00019-g4ea09a298bb4-ab12292661 (build-user@build-host) (Android (7284624, based on r416183b) clang version 12.0.5 (https://android.googlesource.com/toolchain/llvm-project c935d99d7cf2016289302412d708641d52d2f7ee), LLD 12.0.5 (/buildbot/src/android/llvm-toolchain/out/llvm-project/lld c935d99d7cf2016289302412d708641d52d2f7ee)) #1 SMP PREEMPT Wed Aug 28 22:16:09 UTC 2024
+```
+
 # How to build
 ## Dependencies
 - Ubuntu 24.04 wsl
